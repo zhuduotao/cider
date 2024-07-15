@@ -1,0 +1,15 @@
+{
+  "type": "object",
+  "title": "Ollama Service Settings",
+  "properties": {
+    "baseUrl": {
+      "type": "string",
+      "title": "API URL"
+    },
+    "model": {
+      "type": "string",
+      "title": "Model"
+    }
+  },
+  "required": ["model"]
+}

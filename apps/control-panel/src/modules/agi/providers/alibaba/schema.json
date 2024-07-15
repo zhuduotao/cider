@@ -1,0 +1,24 @@
+{
+  "type": "object",
+  "title": "Alibaba Service Settings",
+  "properties": {
+    "apiUrl": {
+      "type": "string",
+      "title": "Api Uri"
+    },
+    "model": {
+      "type": "string",
+      "title": "Model",
+      "enum": ["qwen-long","qwen-turbo","qwen-plus","qwen-max","qwen-max-longcontext"],
+      "description": "Please visit aliyun.com for more detail and price",
+      "default": "qwen-long"
+    },
+    "alibabaApiKey": {
+      "type": "string",
+      "title": "API Secret",
+      "description": "sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    }
+  },
+  "default": {},
+  "required": ["alibabaApiKey","model"]
+}
