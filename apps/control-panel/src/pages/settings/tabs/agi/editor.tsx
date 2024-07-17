@@ -3,12 +3,12 @@ import {
   Card,
   CardContent,
   CardHeader,
-  Drawer,
+  Dialog,
 } from "@mui/material";
 import {AgiProviderConfigItem} from "./types.ts";
 import {useEffect, useMemo, useRef, useState} from "react";
 import {RJSFSchema} from '@rjsf/utils';
-import SupportedProviders from "@/modules/agi/providers";
+import {SupportedProviders} from "@cider/agi-module";
 import emptySvg from '@/assets/empty.svg'
 import Form from '@rjsf/core'
 import DynamicForm from "@/components/forms/dynamic-form.tsx";
@@ -114,12 +114,12 @@ const AgiServiceEditor = (
 
 
   return (
-    <Drawer
-      anchor="right"
+    <Dialog
+      fullScreen
       open={!!props.editingConfig}
     >
       <Box
-        className="w-80 h-full p-4 flex flex-col gap-4 flex-nowrap"
+        className="w-full h-full p-4 flex flex-col gap-4 flex-nowrap"
       >
         <div className="flex-shrink-0 flex-grow-0">
           <Card>
@@ -137,7 +137,7 @@ const AgiServiceEditor = (
           <Button onClick={onClickSave}>Save</Button>
         </div>
       </Box>
-    </Drawer>
+    </Dialog>
   )
 }
 export default AgiServiceEditor

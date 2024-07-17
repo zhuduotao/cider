@@ -5,10 +5,8 @@ import EmptyAgiServiceProvider from "./EmptyAgiServiceProvider.ts";
 
 
 
-const SupportedProviders: Record<string, AgiServiceStatic> = {
+export const SupportedProviders: Record<string, AgiServiceStatic> = {
   'empty': EmptyAgiServiceProvider,
   'alibaba': AlibabaAgiServiceProvider,
   'ollama': OllamaAgiServiceProvider
 }
-
-export default SupportedProviders

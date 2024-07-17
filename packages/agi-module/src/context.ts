@@ -1,17 +1,14 @@
 import {BehaviorSubject, ReplaySubject, Subject, Subscription} from "rxjs";
-import {MessageChunk} from "./types.ts";
+import {AgiProviderConfigItem, MessageChunk} from "./types.ts";
 import {AgiService, AgiServiceSession} from "./agi-service.ts";
 import {BaseMessage, HumanMessage} from "@langchain/core/messages";
-import SupportedProviders from "./providers";
-import ConfigStorage from "../storage/config-storage.ts";
-import {cloneDeep, get, isEqual} from "lodash-es";
-import {SettingChangedSubjection} from "@/subjects.ts";
+import {SupportedProviders} from "./providers";
 import {LocalForageChatMessageHistory} from "./history/LocalForageChatMessageHistory.ts";
-import {STORAGE_KEY} from "@/constants/config_keys.ts";
-import {EMPTY_AGI_PROVIDER, MESSAGE_SCOPE_AGI_PROVIDER_CHANGED} from "@/constants.ts";
-import {AgiProviderConfigItem} from "@/pages/settings/tabs/agi/types.ts";
-import AgiHelper from "@/modules/agi/index.ts";
-import ConfigFileBoundChatMessageHistory from "@/modules/agi/history/ConfigFileBoundChatMessageHistory.ts";
+import {EMPTY_AGI_PROVIDER} from "./constants.ts";
+import AgiHelper from "./index.ts";
+import ConfigFileBoundChatMessageHistory from "./history/ConfigFileBoundChatMessageHistory.ts";
+import {cloneDeep, get, isEqual} from "lodash-es";
+import EmptyAgiServiceProvider from "./providers/EmptyAgiServiceProvider.ts";
 
 export type AiContextMessage = {
   action:  'notReady'|'providerReloaded'
@@ -26,27 +23,13 @@ class Context {
   private _currentAgiServiceConfig : AgiProviderConfigItem | null = null;
 
 
-  private readonly _messageStreamSubject : Subject<MessageChunk>  = new ReplaySubject<MessageChunk>(0);
+  private readonly _messageStreamSubject : Subject<MessageChunk>  = new ReplaySubject<MessageChunk>();
   private readonly _subject : Subject<AiContextMessage> = new BehaviorSubject<AiContextMessage>({action: 'notReady'})
 
   private sessionMap : Map<string, ConfigFileBoundChatMessageHistory> = new Map();
 
   private constructor() {
-    this.registerAiProvider()
-  }
-
-  /**
-   * Listen to the provider settings
-   */
-  private async registerAiProvider() {
-    await this.buildAgiServiceFromConfig()
-    SettingChangedSubjection.subscribe(async ({scope, payload})=>{
-      if(scope === MESSAGE_SCOPE_AGI_PROVIDER_CHANGED) {
-        if(payload.prevConfigId !== payload.nextConfigId || payload.configChanged) {
-          await this.buildAgiServiceFromConfig()
-        }
-      }
-    })
+    this.buildAgiServiceFromConfig()
   }
 
   public static getInstance() {
@@ -58,11 +41,16 @@ class Context {
   }
 
   public getAgiService() : AgiService {
+    if(!this._agiService) return new EmptyAgiServiceProvider()
     return this._agiService!;
   }
 
-  public subscribeMessageStream(callback: (messageChunk: MessageChunk) => void): Subscription {
-    return this._messageStreamSubject.subscribe(callback);
+  public subscribeMessageStream(messageId: string, callback: (messageChunk: MessageChunk) => void): Subscription {
+    return this._messageStreamSubject.subscribe((chunk)=>{
+      if(messageId === chunk.messageId) {
+        callback?.(chunk)
+      }
+    });
   }
 
   /**
@@ -119,7 +107,6 @@ class Context {
       this._messageStreamSubject.next(new MessageChunk(chunkSubscriberId, '', true))
       return fullMessage;
     } catch (e) {
-      console.error(e)
       this._messageStreamSubject.next(new MessageChunk(chunkSubscriberId, get(e,'message','Unknown Error Happened! Please check your settings or ask your service provider.'), true))
     }
   }
@@ -129,7 +116,20 @@ class Context {
     return cloneDeep(this._currentAgiServiceConfig);
   }
 
-
+  public setApiConfig(config?: AgiProviderConfigItem) {
+    if(!config) {
+      config = {
+        provider: EMPTY_AGI_PROVIDER,
+        data: {},
+        name: 'Agi provider not set',
+        version: 0,
+      }
+    }
+    this._currentAgiServiceConfig = config;
+    const ProviderConstructor = SupportedProviders[config.provider!];
+    this._agiService = new ProviderConstructor(config.data);
+    this._subject.next({action: 'providerReloaded'})
+  }
 
 
   /**
@@ -137,24 +137,14 @@ class Context {
    * @private
    */
   private async buildAgiServiceFromConfig(): Promise<void> {
-    const currentUsingConfigId : string = await ConfigStorage.load(STORAGE_KEY.CURRENT_AGI_PROVIDER_CONFIG_ID)
 
-    if(!currentUsingConfigId) {
-      this._agiService = new SupportedProviders[EMPTY_AGI_PROVIDER](null);
-      return;
-    }
 
-    const configFile : AgiProviderConfigItem = await ConfigStorage.load(`${STORAGE_KEY.AGI_PROVIDER_CONFIG_PREFIX}${currentUsingConfigId}`)
-    this._currentAgiServiceConfig = configFile;
 
-    const ProviderConstructor = SupportedProviders[configFile.provider!];
-    this._agiService = new ProviderConstructor(configFile.data);
-    this._subject.next({action: 'providerReloaded'})
   }
 
 }
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
-window._aiAgent = Context.getInstance();
+window._agiService = Context.getInstance();
 export default Context;

@@ -11,8 +11,7 @@ class EmptyAgiServiceProvider extends AbstractAgiServiceProvider {
 
   static disableConstruct = true
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  constructor(_params: unknown) {
+  constructor() {
     super()
   }
 

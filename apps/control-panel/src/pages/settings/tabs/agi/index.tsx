@@ -39,6 +39,8 @@ const AgiSettingsTab = () => {
   const handleOnActiveConfig = async (checked:boolean, configId: string) =>{
     if(!checked) return
     await ConfigStorage.save(STORAGE_KEY.CURRENT_AGI_PROVIDER_CONFIG_ID,configId)
+
+
     SettingChangedSubjection.next({
       scope: MESSAGE_SCOPE_AGI_PROVIDER_CHANGED,
       payload: {

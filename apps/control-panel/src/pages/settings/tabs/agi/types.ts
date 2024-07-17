@@ -1,4 +1,4 @@
-import SupportedProviders from "@/modules/agi/providers";
+import {SupportedProviders} from "@cider/agi-module";
 
 export interface AgiProviderConfigItem {
   id?: string,

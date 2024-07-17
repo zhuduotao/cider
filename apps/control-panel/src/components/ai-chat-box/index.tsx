@@ -3,11 +3,10 @@ import {ClearAllOutlined, SendOutlined} from "@mui/icons-material";
 import {useEffect, useRef, useState} from "react";
 import MessageItem from "./message-item.tsx";
 import {randomUUID} from "@/utils/random.ts";
-import {Message, MessageRole} from "@/modules/agi/types.ts";
+import {Message, MessageRole, BaseMessage, MessageType as BaseMessageType} from "@cider/agi-module";
 import './index.css'
 import {Subscription} from "rxjs";
-import {BaseMessage, MessageType as BaseMessageType} from "@langchain/core/messages";
-import AgiHelper from "@/modules/agi";
+import AgiHelper from "@cider/agi-module";
 import * as localforage from "localforage";
 import {toast} from "react-toastify";
 
@@ -108,6 +107,8 @@ const AiChatBox = () =>{
         new Message('assistant', sessionId!, replyMessageId, questionMessageId, ''),
       ]
     })
+    setPendingMessage('')
+
     setTimeout(()=>{
       try {
         AgiHelper.chat(
@@ -118,8 +119,7 @@ const AiChatBox = () =>{
       } catch (e: any) {
         toast.error(e?.message || e,{position: 'bottom-center'})
       }
-    },0)
-    setPendingMessage('')
+    }, 60)
   }
 
   const onClearAll = ()=> {

@@ -1,16 +1,14 @@
 
-import {useCallback, useEffect, useRef, useState} from "react";
-import {Message, MessageChunk} from "@/modules/agi/types.ts";
+import {memo, useCallback, useEffect, useRef, useState} from "react";
+import AgiHelper, {Message, MessageChunk} from "@cider/agi-module";
 import {Subscription} from "rxjs";
-import {Card} from "@mui/material";
-import {Skeleton} from "@mui/lab";
+import {Card, Skeleton} from "@mui/material";
 import {throttle} from 'lodash-es';
 import '@microflash/rehype-starry-night/css'
 import {StyledMarkdown} from "./styled-markdown.tsx";
 
 import HumanSvg from '@/assets/human.svg'
 import RobotSvg from '@/assets/robot.svg'
-import AgiHelper from "@/modules/agi";
 
 interface MessageItemProps {
   message: Message,
@@ -30,7 +28,7 @@ function MessageItem(props: MessageItemProps ) {
   const containerHeightRef = useRef<number>(0)
 
   const subscribeMessageChunk = ()=>{
-    messageChunkSubscriptionRef.current = AgiHelper.subscribeMessageStream(onReceiveMessage);
+    messageChunkSubscriptionRef.current = AgiHelper.subscribeMessageStream(message.messageId!,onReceiveMessage);
   }
   
   const unsubscribeMessageChunk = ()=>{
@@ -56,6 +54,7 @@ function MessageItem(props: MessageItemProps ) {
   ,[])
 
   const onReceiveMessage = useCallback((chunk: MessageChunk)=>{
+
     if(message.messageId === chunk.messageId) {
       setInnerMessage(prev=>prev+chunk.chunk)
       measureContentHeightAndTriggerEvent()
@@ -97,4 +96,8 @@ function MessageItem(props: MessageItemProps ) {
   )
 }
 
-export default MessageItem;
+
+const MemoMessageItem = memo(MessageItem,(prevProps, nextProps)=>{
+  return prevProps.message.messageId === nextProps.message.messageId
+})
+export default MemoMessageItem

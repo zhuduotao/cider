@@ -1,12 +1,16 @@
-import Context, {AiContextMessage} from "@/modules/agi/context.ts";
+import Context, {AiContextMessage} from "./context.ts";
 import {Subscription} from "rxjs";
-import {MessageChunk} from "@/modules/agi/types.ts";
+import {AgiProviderConfigItem, MessageChunk} from "./types.ts";
 
 /**
  * High-level api of AI context
  */
 class AgiHelper {
   private constructor() {}
+
+  static setApiConfig(config?: AgiProviderConfigItem) {
+    return Context.getInstance().setApiConfig(config)
+  }
 
   /**
    * Add listener to the AI context lifecycle
@@ -27,7 +31,7 @@ class AgiHelper {
   ) {
     await Context.getInstance().chat(sessionId, messageId, question)
     if(messageChunkCallback) {
-      const subscription = Context.getInstance().subscribeMessageStream((messageChunk: MessageChunk)=>{
+      const subscription = Context.getInstance().subscribeMessageStream(messageId,(messageChunk: MessageChunk)=>{
         if(messageChunk.messageId === messageId) {
           // pass the chunk to the original callback
           messageChunkCallback?.(messageChunk)
@@ -43,8 +47,8 @@ class AgiHelper {
   /**
    * If not using the chat callback, you can use this method to subscribe the message stream
    */
-  static subscribeMessageStream(callback: (messageChunk: MessageChunk) => void): Subscription {
-    return Context.getInstance().subscribeMessageStream(callback)
+  static subscribeMessageStream(messageId: string,callback: (messageChunk: MessageChunk) => void): Subscription {
+    return Context.getInstance().subscribeMessageStream(messageId, callback)
   }
 
   /**

@@ -1,0 +1,1 @@
+export const EMPTY_AGI_PROVIDER = 'empty'

@@ -1,0 +1,36 @@
+{
+  "name": "@cider/agi-module",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "vite": "^5.3.1",
+    "@types/lodash-es": "^4.17.12",
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "@langchain/community": "^0.2.13",
+    "@langchain/core": "^0.2.9",
+    "@langchain/openai": "^0.2.0",
+    "langchain": "^0.2.6"
+  },
+  "peerDependencies": {
+    "@cider/eslint-config": "workspace:*",
+    "@cider/typescript-config": "workspace:*",
+    "@rjsf/utils": "^5.19.2",
+    "dayjs": "^1.11.11",
+    "lodash-es": "^4.17.21",
+    "rxjs": "^7.8.1",
+    "localforage": "^1.10.0"
+  }
+}

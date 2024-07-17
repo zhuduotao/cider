@@ -23,6 +23,9 @@ importers:
 
   apps/control-panel:
     dependencies:
+      '@cider/agi-module':
+        specifier: workspace:*
+        version: link:../../packages/agi-module
       '@ckeditor/ckeditor5-react':
         specifier: ^8.0.0
         version: 8.0.0(ckeditor5@42.0.0)(react@18.3.1)
@@ -35,15 +38,6 @@ importers:
       '@fontsource/roboto':
         specifier: ^5.0.13
         version: 5.0.13
-      '@langchain/community':
-        specifier: ^0.2.13
-        version: 0.2.13
-      '@langchain/core':
-        specifier: ^0.2.9
-        version: 0.2.9(langchain@0.2.6)
-      '@langchain/openai':
-        specifier: ^0.2.0
-        version: 0.2.0(langchain@0.2.6)
       '@microflash/rehype-starry-night':
         specifier: ^4.1.0
         version: 4.1.0
@@ -86,9 +80,6 @@ importers:
       jsonschema:
         specifier: ^1.4.1
         version: 1.4.1
-      langchain:
-        specifier: ^0.2.6
-        version: 0.2.6
       localforage:
         specifier: ^1.10.0
         version: 1.10.0
@@ -204,6 +195,52 @@ importers:
       vite-plugin-json5:
         specifier: ^1.1.2
         version: 1.1.2(@rollup/pluginutils@5.1.0)(vite@5.3.1)
+
+  packages/agi-module:
+    dependencies:
+      '@cider/eslint-config':
+        specifier: workspace:*
+        version: link:../config-eslint
+      '@cider/typescript-config':
+        specifier: workspace:*
+        version: link:../config-typescript
+      '@langchain/community':
+        specifier: ^0.2.13
+        version: 0.2.13
+      '@langchain/core':
+        specifier: ^0.2.9
+        version: 0.2.9(langchain@0.2.6)
+      '@langchain/openai':
+        specifier: ^0.2.0
+        version: 0.2.0(langchain@0.2.6)
+      '@rjsf/utils':
+        specifier: ^5.19.2
+        version: 5.19.2(react@18.3.1)
+      dayjs:
+        specifier: ^1.11.11
+        version: 1.11.11
+      langchain:
+        specifier: ^0.2.6
+        version: 0.2.6
+      localforage:
+        specifier: ^1.10.0
+        version: 1.10.0
+      lodash-es:
+        specifier: ^4.17.21
+        version: 4.17.21
+      rxjs:
+        specifier: ^7.8.1
+        version: 7.8.1
+    devDependencies:
+      '@types/lodash-es':
+        specifier: ^4.17.12
+        version: 4.17.12
+      typescript:
+        specifier: ^5.2.2
+        version: 5.4.5
+      vite:
+        specifier: ^5.3.1
+        version: 5.3.1
 
   packages/config-eslint:
     devDependencies:
@@ -5159,7 +5196,7 @@ packages:
     dev: false
 
   /husky@9.0.11:
-    resolution: {integrity: sha512-AB6lFlbwwyIqMdHYhwPe+kjOC3Oc5P3nThEoW/AaO2BX3vJDjWPFxYLxokUZOo6RNX20He3AaT8sESs9NJcmEw==, tarball: https://artifacts.corp.zoom.us:443/artifactory/api/npm/zoom-npm-virtual/husky/-/husky-9.0.11.tgz}
+    resolution: {integrity: sha512-AB6lFlbwwyIqMdHYhwPe+kjOC3Oc5P3nThEoW/AaO2BX3vJDjWPFxYLxokUZOo6RNX20He3AaT8sESs9NJcmEw==}
     engines: {node: '>=18'}
     hasBin: true
     dev: true
@@ -6073,7 +6110,7 @@ packages:
     dev: true
 
   /lie@3.1.1:
-    resolution: {integrity: sha512-RiNhHysUjhrDQntfYSfY4MU24coXXdEOgw9WGcKHNeEwffDYbF//u87M1EWaMGzuFoSbqW0C9C6lEEhDOAswfw==}
+    resolution: {integrity: sha512-RiNhHysUjhrDQntfYSfY4MU24coXXdEOgw9WGcKHNeEwffDYbF//u87M1EWaMGzuFoSbqW0C9C6lEEhDOAswfw==, tarball: https://artifacts.corp.zoom.us:443/artifactory/api/npm/zoom-npm-virtual/lie/-/lie-3.1.1.tgz}
     dependencies:
       immediate: 3.0.6
     dev: false

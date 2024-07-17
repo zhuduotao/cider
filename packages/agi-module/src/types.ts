@@ -1,3 +1,4 @@
+import {SupportedProviders} from "./providers";
 
 export declare type MessageRole = "system" | "assistant" | "user"
 
@@ -44,4 +45,12 @@ export class MessageChunk {
     this.chunk = chunk
     this.end = end
   }
+}
+
+export interface AgiProviderConfigItem {
+  id?: string,
+  provider?: keyof typeof SupportedProviders,
+  name: string,
+  version: number,
+  data: any
 }

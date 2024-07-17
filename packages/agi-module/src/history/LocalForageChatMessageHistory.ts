@@ -1,9 +1,10 @@
 import {BaseMessage, mapStoredMessageToChatMessage, StoredMessage} from "@langchain/core/messages";
 import * as localforage from "localforage";
-import {STORAGE_KEY} from "@/constants/config_keys.ts";
-import {AgiProviderConfigItem} from "@/pages/settings/tabs/agi/types.ts";
 import {isEqual} from "lodash-es";
 import ConfigFileBoundChatMessageHistory from "./ConfigFileBoundChatMessageHistory.ts";
+import {AgiProviderConfigItem} from "../types.ts";
+
+const STORAGE_KEY_PREFIX: string = 'CIDER:AGI_CHAT:'
 
 interface StoragedMessageHistory {
   config: AgiProviderConfigItem,
@@ -23,7 +24,7 @@ export class LocalForageChatMessageHistory extends ConfigFileBoundChatMessageHis
   constructor(sessionId: string) {
     // eslint-disable-next-line prefer-rest-params
     super();
-    this.cacheKey = `${STORAGE_KEY.CHAT_HISTORY_PREFIX}:SESSION_HISTORY:${sessionId}`
+    this.cacheKey = `${STORAGE_KEY_PREFIX}:SESSION_HISTORY:${sessionId}`
     this.messages = [];
     this.usingConfigFile;
   }
