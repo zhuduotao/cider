@@ -125,6 +125,7 @@ const AiChatBox = () =>{
   const onClearAll = ()=> {
     setMessageList([]);
     setSessionId(randomUUID())
+    localforage.removeItem(STORAGE_KEY_LAST_SESSION_ID)
   }
 
   return (

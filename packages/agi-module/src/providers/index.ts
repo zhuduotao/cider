@@ -8,5 +8,5 @@ import EmptyAgiServiceProvider from "./EmptyAgiServiceProvider.ts";
 export const SupportedProviders: Record<string, AgiServiceStatic> = {
   'empty': EmptyAgiServiceProvider,
   'alibaba': AlibabaAgiServiceProvider,
-  'ollama': OllamaAgiServiceProvider
+  'ollama': OllamaAgiServiceProvider,
 }
